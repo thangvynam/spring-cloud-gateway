@@ -8,13 +8,13 @@ spring:
             #                - name: SCGWGlobalFilter
             routes:
                 # custom predicate
-                - id: app_predicate
-                  uri: http://localhost:9091
-                  predicates:
-                      - Path=/api/**
-                  filters:
-                      - RewritePath=/api/abc, /nt-ms/get-data
-                      - Toto
+#                - id: app_predicate
+#                  uri: http://localhost:9091
+#                  predicates:
+#                      - Path=/api/**
+#                  filters:
+#                      - RewritePath=/api/abc, /nt-ms/get-data
+#                      - App
 #                - id: nt-ms1
 #                  uri: http://localhost:9091/
 #                  predicates:

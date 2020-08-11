@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class GatewayAutoConfiguration {
 
     @Bean
-    public RouteLocator myRoutes(RouteLocatorBuilder builder, TotoGatewayFilterFactory factory) {
+    public RouteLocator myRoutes(RouteLocatorBuilder builder, AppGatewayFilterFactory factory) {
         return builder.routes()
                 .route(r -> r.path("/api/**")
                         .and().readBody(String.class, requestBody -> {
@@ -20,7 +20,7 @@ public class GatewayAutoConfiguration {
                         })
                         .filters(f -> f
                                 .rewritePath("/api/abc", "/nt-ms/get-data")
-                                .filter(factory.apply(new TotoGatewayFilterFactory.Config())))
+                                .filter(factory.apply(new AppGatewayFilterFactory.Config())))
                         .uri("http://localhost:9092/")
                         .id("app-service"))
                 .build();
