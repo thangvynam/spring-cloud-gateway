@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import reactor.core.publisher.Mono;
+import zp.gatewayservice.config.Config;
 
 /**
  * @author namtv3
@@ -21,8 +22,8 @@ public class GatewayAutoConfiguration {
                             return true;
                         })
                         .filters(f -> f
-                                .rewritePath("/api/abc", "/cpstelcoconfig/zpi/gettelcogrouppackage")
-                                .filter(factory.apply(new AppGatewayFilterFactory.Config()))
+                                .rewritePath("/api/abc", "/nt-ms/get-data")
+                                .filter(factory.apply(new Config()))
                         )
                         .uri("http://localhost:9092/")
                         .id("app-service"))
