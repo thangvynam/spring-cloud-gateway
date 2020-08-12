@@ -19,22 +19,24 @@ public class RequestBodyHelper {
     public static MultiValueMap<String, String> convertJsonToQueryParamMap(String json ) {
 
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-
-        try {
-            jsonNode = mapper.readTree(json);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
-
-        while ( fields.hasNext() ){
-            Map.Entry<String, JsonNode> entry = fields.next();
-            multiValueMap.add(entry.getKey(), entry.getValue().asText());
-        }
+        multiValueMap.add("key", "nam");
+        multiValueMap.add("value", "se");
+//        ObjectMapper mapper = new ObjectMapper();
+//        JsonNode jsonNode = null;
+//
+//        try {
+//            jsonNode = mapper.readTree(json);
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+//
+//        while ( fields.hasNext() ){
+//            Map.Entry<String, JsonNode> entry = fields.next();
+//            multiValueMap.add(entry.getKey(), entry.getValue().asText());
+//        }
 
         return multiValueMap;
     }

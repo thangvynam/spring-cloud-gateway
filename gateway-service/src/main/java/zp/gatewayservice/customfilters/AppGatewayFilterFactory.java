@@ -1,6 +1,7 @@
 package zp.gatewayservice.customfilters;
 
 import com.google.gson.Gson;
+import io.netty.buffer.ByteBufAllocator;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.bouncycastle.util.Strings;
@@ -10,13 +11,21 @@ import org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.NettyDataBufferFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -29,9 +38,9 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 @Component
 public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayFilterFactory.Config> {
 
-    private static final String FIRST_SERVICE = "http://localhost:9091";
+    private static final String FIRST_SERVICE = "http://localhost:9837";
 
-    private static final String SECOND_SERVICE = "http://localhost:9091";
+    private static final String SECOND_SERVICE = "http://localhost:9838";
 
     @Override
     public Class getConfigClass() {
@@ -51,29 +60,63 @@ public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayF
                 return chain.filter(exchange);
             }
 
-            return DataBufferUtils.join(exchange.getRequest().getBody())
-                    .flatMap(dataBuffer -> {
+            String data = exchange.getAttribute("cachedRequestBodyObject");
+            DataRequest dataReq = parseData(data);
 
-                        DataBufferUtils.retain(dataBuffer);
-                        Flux<DataBuffer> cachedFlux = Flux.defer(() -> Flux.just(dataBuffer.slice(0, dataBuffer.readableByteCount())));
+            URI newUri = genUri(dataReq, exchange.getRequest().getPath().toString());
+            if (newUri == null) {
+                return null;
+            }
 
-                        String queryString = toRaw(cachedFlux);
+//            ServerHttpRequest newRequest = exchange.getRequest().mutate().uri(newUri).build();
+//            String bodyString = getRequestBody(exchange.getRequest());
+//            DataBuffer bodyDataBuffer = stringBuffer(bodyString);
+//            Flux<DataBuffer> bodyFlux = Flux.just(bodyDataBuffer);
+//
+//            HttpHeaders myHeaders = new HttpHeaders();
+//            copyMultiValueMap(exchange.getRequest().getHeaders(), myHeaders);
+//            myHeaders.remove(HttpHeaders.CONTENT_LENGTH);
+//            myHeaders.set(HttpHeaders.CONTENT_LENGTH, String.valueOf(bodyDataBuffer.readableByteCount()));
+//            newRequest = new ServerHttpRequestDecorator(newRequest) {
+//                @Override
+//                public Flux<DataBuffer> getBody() {
+//                    return bodyFlux;
+//                }
+//            };
+//            ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();
 
-                        DataRequest dataReq = parseData(queryString);
+            exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, newUri);
 
-                        URI newUri = genUri(dataReq, exchange.getRequest().getPath().toString());
-                        if (newUri == null) {
-                            return null;
-                        }
-
-                        ServerHttpRequest request = exchange.getRequest().mutate()
-                                .uri(newUri)
-                                .build();
-
-                        exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, newUri);
-                        return chain.filter(exchange.mutate().request(request).build());
-                    });
+            return chain.filter(exchange);
         }, RouteToRequestUrlFilter.ROUTE_TO_URL_FILTER_ORDER + 1);
+    }
+
+    private static <K, V> void copyMultiValueMap(MultiValueMap<K,V> source, MultiValueMap<K,V> target) {
+        source.forEach((key, value) -> target.put(key, new LinkedList<>(value)));
+    }
+
+    private DataBuffer stringBuffer(String value){
+        byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
+        NettyDataBufferFactory nettyDataBufferFactory = new
+                NettyDataBufferFactory(ByteBufAllocator.DEFAULT);
+        DataBuffer buffer = nettyDataBufferFactory.allocateBuffer(bytes.length);
+        buffer.write(bytes);
+        return buffer;
+    }
+
+    private String getRequestBody(ServerHttpRequest request) {
+        Flux<DataBuffer> body = request.getBody();
+        StringBuilder sb = new StringBuilder();
+
+        body.subscribe(buffer -> {
+            byte[] bytes = new byte[buffer.readableByteCount()];
+            buffer.read(bytes);
+            DataBufferUtils.release(buffer);
+            String bodyString = new String(bytes, StandardCharsets.UTF_8);
+            sb.append(bodyString);
+        });
+        String str = sb.toString();
+        return str;
     }
 
     private URI genUri(DataRequest dataReq, String path) {
@@ -81,7 +124,7 @@ public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayF
         URI newUri = null;
         int appId = dataReq.appid;
 
-        if (appId == 12) {
+        if (appId == 441) {
             host = FIRST_SERVICE;
         } else {
             host = SECOND_SERVICE;
@@ -116,7 +159,6 @@ public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayF
         });
         return rawRef.get();
     }
-
 
     public static class Config {
 
