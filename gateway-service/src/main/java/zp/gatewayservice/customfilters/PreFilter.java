@@ -6,20 +6,22 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SCGWGlobalFilter extends AbstractGatewayFilterFactory<SCGWGlobalFilter.Config> {
-	
-	public SCGWGlobalFilter() {
+public class PreFilter extends AbstractGatewayFilterFactory<PreFilter.Config> {
+
+	public PreFilter() {
 		super(Config.class);
 	}
-
+	
 	@Override
 	public GatewayFilter apply(Config config) {
-
-		System.out.println("inside SCGWGlobalFilter.apply method");
+		System.out.println("inside SCGWPreFilter.apply method");
 		
 		return (exchange, chain) -> {
-			ServerHttpRequest request = exchange.getRequest().mutate().header("scgw-global-header",
-					Math.random() * 10 + "").build();
+			ServerHttpRequest request = exchange.getRequest()
+					.mutate()
+					.uri(exchange.getRequest().getURI())
+					.header("pre-header", "This is Pre-Header")
+					.build();
 			return chain.filter(exchange.mutate().request(request).build());
 		};
 	}

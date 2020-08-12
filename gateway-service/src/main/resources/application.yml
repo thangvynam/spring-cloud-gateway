@@ -1,29 +1,16 @@
 server:
     port: 9090
----
 spring:
     cloud:
         gateway:
-            #            default-filters:
-            #                - name: SCGWGlobalFilter
+            default-filters:
+                - name: GlobalFilter
             routes:
-                # custom predicate
-#                - id: app_predicate
-#                  uri: http://localhost:9091
-#                  predicates:
-#                      - Path=/api/**
-#                  filters:
-#                      - RewritePath=/api/abc, /nt-ms/get-data
-#                      - App
-#                - id: nt-ms1
-#                  uri: http://localhost:9091/
-#                  predicates:
-#                      - Path=/nt-ms1/**
-#                      #- Before=2021-01-20T17:42:47.789-07:00[America/Denver]
-#                  filters:
-#                      - name: SCGWPreFilter
-#                      - name: SCGWPostFilter
-#                - id: nt-ms2
-#                  uri: http://localhost:9092/
-#                  predicates:
-#                      - Path=/nt-ms2/**
+                - id: test
+                  uri: http://localhost:9091/
+                  predicates:
+                      - Path=/test/**
+                      #- Before=2021-01-20T17:42:47.789-07:00[America/Denver]
+                  filters:
+                      - name: PreFilter
+#                      - name: PostFilter

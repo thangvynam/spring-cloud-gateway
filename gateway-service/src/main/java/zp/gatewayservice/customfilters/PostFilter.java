@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class SCGWPostFilter extends AbstractGatewayFilterFactory<SCGWPostFilter.Config> {
+public class PostFilter extends AbstractGatewayFilterFactory<PostFilter.Config> {
 	
-	public SCGWPostFilter() {
+	public PostFilter() {
 		super(Config.class);
 	}
 	
@@ -31,6 +31,7 @@ public class SCGWPostFilter extends AbstractGatewayFilterFactory<SCGWPostFilter.
 	}
 	
 	public static class Config {
+
 		private String name;
 		
 		public String getName() {

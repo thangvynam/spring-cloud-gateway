@@ -21,7 +21,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
-import zp.gatewayservice.config.Config;
 import zp.gatewayservice.data.DataRequest;
 
 import java.net.URI;
@@ -38,7 +37,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
  * @author namtv3
  */
 @Component
-public class AppGatewayFilterFactory implements GatewayFilterFactory<Config> {
+public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayFilterFactory.Config> {
 
     private static final String FIRST_SERVICE = "http://localhost:9091";
 
@@ -99,6 +98,10 @@ public class AppGatewayFilterFactory implements GatewayFilterFactory<Config> {
         Gson gson = new Gson();
         DataRequest dataReq = gson.fromJson(value, DataRequest.class);
         return dataReq;
+
+    }
+
+    public static class Config {
 
     }
 }

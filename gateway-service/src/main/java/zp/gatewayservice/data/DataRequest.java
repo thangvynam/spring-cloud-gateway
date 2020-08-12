@@ -4,7 +4,9 @@ package zp.gatewayservice.data;
  * @author namtv3
  */
 public class DataRequest {
+
     public int appid;
+
     public int zalopayid;
 
     public DataRequest() {
