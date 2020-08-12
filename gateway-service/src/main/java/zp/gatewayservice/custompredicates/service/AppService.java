@@ -1,7 +1,7 @@
 package zp.gatewayservice.custompredicates.service;
 
-import zp.gatewayservice.custompredicates.enums.AppEnum;
 import org.springframework.stereotype.Component;
+import zp.gatewayservice.custompredicates.enums.AppEnum;
 
 /**
  *
