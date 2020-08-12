@@ -1,6 +1,6 @@
 package zp.gatewayservice.data;
+
 /**
- *
  * @author namtv3
  */
 public class DataRequest {
