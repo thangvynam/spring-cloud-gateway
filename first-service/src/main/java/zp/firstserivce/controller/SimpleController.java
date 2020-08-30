@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/nt-ms")
+@RequestMapping("/transfer")
 public class SimpleController {
 
-    @PostMapping(value = "/get-data")
+    @PostMapping(value = "/refund")
     public Mono<String> getData(ServerHttpRequest request, ServerHttpResponse response) {
 
         System.out.println("Inside first service getData method");
