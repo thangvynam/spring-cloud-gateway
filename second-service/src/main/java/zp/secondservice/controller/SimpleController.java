@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/nt-ms")
+@RequestMapping("/telco")
 public class SimpleController {
-    @PostMapping(value = "/get-data")
+    @PostMapping(value = "/refund")
     public Mono<String> getData(ServerHttpRequest request, ServerHttpResponse response) {
         System.out.println("Inside Second Service getData method");
         HttpHeaders headers = request.getHeaders();
