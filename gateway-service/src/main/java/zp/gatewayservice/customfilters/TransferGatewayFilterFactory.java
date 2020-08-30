@@ -21,7 +21,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
  * @author namtv3
  */
 @Component
-public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayFilterFactory.Config> {
+public class TransferGatewayFilterFactory implements GatewayFilterFactory<TransferGatewayFilterFactory.Config> {
 
     private static final String FIRST_SERVICE = "http://localhost:9091";
 
@@ -57,11 +57,7 @@ public class AppGatewayFilterFactory implements GatewayFilterFactory<AppGatewayF
         URI newUri = null;
         int appId = dataReq.appid;
 
-        if (appId == 441) {
-            host = FIRST_SERVICE;
-        } else {
-            host = SECOND_SERVICE;
-        }
+        host = SECOND_SERVICE;
 
         try {
             newUri = new URI(host + path);
