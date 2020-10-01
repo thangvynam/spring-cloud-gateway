@@ -7,7 +7,7 @@
 
 ## Get Started
 
-![Generator Web](https://huongdanjava.com/wp-content/uploads/2020/04/spring-cloud.png)
+![Generator Web](https://res.cloudinary.com/practicaldev/image/fetch/s--6xZ4JmSD--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/8bees1ilfgpdcqdr4m9j.jpg)
 
 ### Installing
 
