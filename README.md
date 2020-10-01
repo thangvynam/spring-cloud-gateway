@@ -1,10 +1,13 @@
 # Spring Cloud Gateway App
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen) ![version](https://img.shields.io/badge/contributors-1-blueviolet) 
-This is a demo for using Spring Cloud Gateway. 
+
+- This is a demo for using Spring Cloud Gateway. 
 
 
 ## Get Started
+
+![Generator Web](https://huongdanjava.com/wp-content/uploads/2020/04/spring-cloud.png)
 
 ### Installing
 
